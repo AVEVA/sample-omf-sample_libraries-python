@@ -30,14 +30,14 @@ resources:
 
 variables:
   - name: analysisProject
-    value: REPLACE_WITH_SAMPLE_NAME #TODO Replace placeholder.
+    value: sample-omf-sample_libraries-python
 
 parameters:
   - name: pool
     default: DevOps Managed Containers Build
   - name: containerDemands
     type: object
-    default: ['Agent.OS -equals Linux'] #TODO Check container demands.
+    default: ['Agent.OS -equals Linux']
 
 jobs:
   - job: Tests
@@ -48,13 +48,35 @@ jobs:
     steps:
       - template: '/miscellaneous/build_templates/appsettings.yml@templates'
         parameters:
-          secrets: 'TenantId, NamespaceId, CommunityId, ClientId, ClientSecret, Resource'
+          secrets: 'TenantId, NamespaceId, ClientId, ClientSecret, Resource'
 
-      #TODO Add steps to run sample tests.
+      - script: |
+          echo Install test tools  
+          pip install pytest
+          echo Install requirements
+          pip install -r requirements.txt
+          echo Run tests
+          cd ./omf_sample_library_preview/Tests
+          python -m pytest --junitxml=junit/test-results-omfclient.xml test_omfclient.py --e2e True
+          echo Complete
+        displayName: 'Run tests'
 
-  #TODO Static code analysis should be run by any sample that can.
-  #If the language your sample is written in not supported by polaris and blackduck, you may remove this job and OpsGuildAutomationRepo repository above.
-  #Example: Power Query is not supported so those samples do not have a code analysis step.
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFiles: '**/test-*.xml'
+          failTaskOnFailedTests: true
+          testRunTitle: '$(Agent.JobName) on $(Agent.OS)'
+        displayName: 'Publish test results'
+        condition: always()
+
   - template: '/miscellaneous/build_templates/code-analysis.yml@templates'
     parameters:
-      useRequirementsTxt: true
+      buildSteps:
+        - script: |
+            echo Install tools
+            call pip install wheel
+            call pip install twine
+            echo Build library
+            call python setup.py sdist bdist_wheel
+            echo Complete
+          displayName: 'Build'
