@@ -1,4 +1,4 @@
-# new-public-sample-template
+# OMF Python Library Sample
 
 **Version:** 1.0.0_preview
 
