@@ -5,6 +5,7 @@ from typing import Any
 
 
 from .OMFClassification import OMFClassification
+from .OMFEnum import OMFEnum
 from .OMFExtrapolationMode import OMFExtrapolationMode
 from .OMFTypeProperty import OMFTypeProperty
 from .Serializeable import Serializeable
@@ -20,7 +21,7 @@ class OMFType(Serializeable):
     Description: str = None
     Tags: list[str] = None
     Metadata: dict[str, Any] = None
-    Enum: dict[str, Any] = None
+    Enum: OMFEnum = None
     Extrapolation: OMFExtrapolationMode = None
     Properties: dict[str, OMFTypeProperty] = None
 
