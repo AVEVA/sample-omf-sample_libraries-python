@@ -4,6 +4,7 @@ from enum import Enum
 
 
 class OMFTypeCode(Enum):
+    Null = 'Null'
     Array = 'Array'
     Boolean = 'Boolean'
     Integer = 'Integer'

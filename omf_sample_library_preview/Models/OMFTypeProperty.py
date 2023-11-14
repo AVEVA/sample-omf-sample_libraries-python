@@ -22,3 +22,4 @@ class OMFTypeProperty(Serializeable):
     Minimum: float | int = None
     Maximum: float | int = None
     Interpolation: OMFInterpolationMode = None
+    AdditionalProperties: 'OMFTypeProperty' = None
