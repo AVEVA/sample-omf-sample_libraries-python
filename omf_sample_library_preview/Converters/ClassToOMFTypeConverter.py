@@ -1,5 +1,5 @@
 from datetime import datetime
-from types import UnionType, NoneType
+from types import UnionType, NoneType, FunctionType
 from typing import Any, get_type_hints, get_origin, get_args
 
 from ..Models import OMFClassification, OMFExtrapolationMode, OMFFormatCode, OMFInterpolationMode, OMFType, OMFTypeCode, OMFTypeProperty
@@ -80,6 +80,13 @@ def getOMFTypePropertyPythonProperty(prop: property) -> OMFTypeProperty:
 
 
 def convert(omf_class: type) -> OMFType:
+    """
+    Converts a python class into an OMFType. 
+    Properties flagged by the @property decorator get automatically added to the OMF Type as OMF Type Properties.
+    To customize the returned OMFType, use the @omf_type and @omf_type_property decorators.
+    :param omf_class: The python class to be converted into an OMFType
+    :returns: OMFType object
+    """
     if hasattr(omf_class, '__omf_type'):
         omf_type = getattr(omf_class, '__omf_type')
     else:
@@ -134,6 +141,10 @@ def omf_type_property(Type: OMFTypeCode | list[OMFTypeCode] = None,
                       Interpolation: OMFInterpolationMode = None):
 
     def wrap(func):
+        if isinstance(func, property):
+            raise ValueError("Property type is not a valid input. Ensure the property decorator comes before the omf_type_property decorator.")
+        if not isinstance(func, FunctionType):
+            raise ValueError("Non-function type is not a valid input.")
         omf_type_property_attribute = OMFTypeProperty(
             Type, Format, Items, RefTypeId, IsIndex, IsQuality,  Name, Description, Uom, Minimum, Maximum, Interpolation)
         setattr(func, '__omf_type_property', omf_type_property_attribute)

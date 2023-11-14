@@ -14,26 +14,38 @@ class ContainerService:
     def OMFClient(self) -> OMFClient:
         return self.__omf_client
 
-    def createContainers(self, omf_container: list[OMFContainer]):
+    def createContainers(self, omf_containers: list[OMFContainer]):
+        """
+        Creates OMF Containers and throws error on failure
+        :param omf_containers: List of OMF Containers
+        """
         response = self.__omf_client.retryWithBackoff(
             self.__omf_client.omfRequest,
             OMFMessageType.Container,
             OMFMessageAction.Create,
-            omf_container)
+            omf_containers)
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to create container')
 
-    def updateContainers(self, omf_container: list[OMFContainer]):
+    def updateContainers(self, omf_containers: list[OMFContainer]):
+        """
+        Updates OMF Containers and throws error on failure
+        :param omf_containers: List of OMF Containers
+        """
         response = self.__omf_client.retryWithBackoff(
             self.__omf_client.omfRequest,
             OMFMessageType.Container,
             OMFMessageAction.Update,
-            omf_container)
+            omf_containers)
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to update container')
 
-    def deleteContainers(self, omf_container: list[OMFContainer]):
+    def deleteContainers(self, omf_containers: list[OMFContainer]):
+        """
+        Deletes OMF Containers and throws error on failure
+        :param omf_containers: List of OMF Containers
+        """
         response = self.__omf_client.retryWithBackoff(
             self.__omf_client.omfRequest,
             OMFMessageType.Container,
             OMFMessageAction.Delete,
-            omf_container)
+            omf_containers)
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to delete container')

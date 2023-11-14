@@ -15,6 +15,10 @@ class DataService:
         return self.__omf_client
 
     def createData(self, omf_data: list[OMFData]):
+        """
+        Creates OMF Data and throws error on failure
+        :param omf_data: List of OMF Data
+        """
         response = self.__omf_client.retryWithBackoff(
             self.__omf_client.omfRequest,
             OMFMessageType.Data,
@@ -23,6 +27,10 @@ class DataService:
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to create data')
 
     def updateData(self, omf_data: list[OMFData]):
+        """
+        Updates OMF Data and throws error on failure
+        :param omf_data: List of OMF Data
+        """
         response = self.__omf_client.retryWithBackoff(
             self.__omf_client.omfRequest,
             OMFMessageType.Data,
@@ -31,6 +39,10 @@ class DataService:
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to update data')
 
     def deleteData(self, omf_data: list[OMFData]):
+        """
+        Deletes OMF Data and throws error on failure
+        :param omf_data: List of OMF Data
+        """
         response = self.__omf_client.retryWithBackoff(
             self.__omf_client.omfRequest,
             OMFMessageType.Data,

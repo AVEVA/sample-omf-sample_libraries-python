@@ -14,26 +14,38 @@ class TypeService:
     def OMFClient(self) -> OMFClient:
         return self.__omf_client
 
-    def createTypes(self, omf_type: list[OMFType]):
+    def createTypes(self, omf_types: list[OMFType]):
+        """
+        Creates OMF Types and throws error on failure
+        :param omf_types: List of OMF Types
+        """
         response = self.__omf_client.retryWithBackoff(
             self.__omf_client.omfRequest,
             OMFMessageType.Type,
             OMFMessageAction.Create,
-            omf_type)
+            omf_types)
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to create types')
 
-    def updateTypes(self, omf_type: list[OMFType]):
+    def updateTypes(self, omf_types: list[OMFType]):
+        """
+        Updates OMF Types and throws error on failure
+        :param omf_types: List of OMF Types
+        """
         response = self.__omf_client.retryWithBackoff(
             self.__omf_client.omfRequest,
             OMFMessageType.Type,
             OMFMessageAction.Update,
-            omf_type)
+            omf_types)
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to update types')
 
-    def deleteTypes(self, omf_type: list[OMFType]):
+    def deleteTypes(self, omf_types: list[OMFType]):
+        """
+        Deletes OMF Types and throws error on failure
+        :param omf_types: List of OMF Types
+        """
         response = self.__omf_client.retryWithBackoff(
             self.__omf_client.omfRequest,
             OMFMessageType.Type,
             OMFMessageAction.Delete,
-            omf_type)
+            omf_types)
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to delete types')
