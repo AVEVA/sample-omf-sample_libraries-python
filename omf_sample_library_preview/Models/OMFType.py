@@ -14,7 +14,7 @@ from .Serializeable import Serializeable
 @dataclass
 class OMFType(Serializeable):
     Id: str
-    Classification: OMFClassification
+    Classification: OMFClassification = None
     Type: str = 'Object'
     Version: str = None
     Name: str = None

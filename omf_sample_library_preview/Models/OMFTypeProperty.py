@@ -10,7 +10,7 @@ from .Serializeable import Serializeable
 
 @dataclass
 class OMFTypeProperty(Serializeable):
-    Type: OMFTypeCode | list[OMFTypeCode]
+    Type: OMFTypeCode | list[OMFTypeCode] = None
     Format: OMFFormatCode = None
     Items: 'OMFTypeProperty' = None
     RefTypeId: str = None
