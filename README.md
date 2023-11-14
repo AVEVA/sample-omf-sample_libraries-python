@@ -1,6 +1,6 @@
-# new-public-sample-template
+# OMF Python Library Sample
 
-**Version:** 1.0.0_preview
+**Version:** 0.1.0_preview
 
 This sample library requires Python 3.7+. You can download Python [here](https://www.python.org/downloads/).
 
