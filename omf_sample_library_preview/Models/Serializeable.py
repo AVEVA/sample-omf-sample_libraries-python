@@ -1,9 +1,9 @@
 from __future__ import annotations
-from dataclasses import asdict, fields
+from dataclasses import asdict
 from datetime import datetime
 from enum import Enum
 from types import UnionType
-from typing import Any, get_type_hints, get_origin, get_args, Union
+from typing import Any, get_type_hints, get_origin, get_args
 import json
 
 

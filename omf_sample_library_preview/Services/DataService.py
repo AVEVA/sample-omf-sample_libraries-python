@@ -1,5 +1,3 @@
-import requests
-
 from ..Client.OMFClient import OMFClient
 from ..Models.OMFData import OMFData
 from ..Models.OMFMessageAction import OMFMessageAction

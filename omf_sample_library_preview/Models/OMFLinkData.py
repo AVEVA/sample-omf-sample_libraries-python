@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from .OMFLinkValue import OMFLinkValue
 from .OMFData import OMFData
-from typing import Any
 
 
 class OMFLinkData(OMFData):
