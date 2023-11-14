@@ -5,12 +5,7 @@ from typing import Any, get_type_hints, get_origin, get_args
 from ..Models import OMFClassification, OMFExtrapolationMode, OMFFormatCode, OMFInterpolationMode, OMFType, OMFTypeCode, OMFTypeProperty
 
 
-def getOMFTypeFromPythonType(type_hint: type) -> (OMFTypeCode | list[OMFTypeCode], OMFFormatCode, OMFTypeProperty, OMFTypeProperty):
-    omf_type_code = OMFTypeCode.String
-    omf_format_code = None
-    items = None
-    additional_properties = None
-
+def getOMFTypeFromPythonType(type_hint: type) -> OMFTypeProperty:
     if type_hint is NoneType:
         raise ValueError('Invalid OMF Type: NoneType is not allowed')
 
@@ -29,54 +24,46 @@ def getOMFTypeFromPythonType(type_hint: type) -> (OMFTypeCode | list[OMFTypeCode
             nullable_type = args[0]
         else:
             nullable_type = args[1]
-        temp_omf_type_code, omf_format_code, items, additional_properties = getOMFTypeFromPythonType(
-            nullable_type)
-        omf_type_code = [temp_omf_type_code, OMFTypeCode.Null]
-    elif type_hint is int:
-        omf_type_code = OMFTypeCode.Integer
+        result = getOMFTypeFromPythonType(nullable_type)
+        result.Type = [result.Type, OMFTypeCode.Null]
+        return result
+    if type_hint is int:
+        return OMFTypeProperty(OMFTypeCode.Integer)
     elif type_hint is float:
-        omf_type_code = OMFTypeCode.Number
-    elif type_hint is datetime:
-        omf_format_code = OMFFormatCode.DateTime
-    elif type_hint is bool:
-        omf_type_code = OMFTypeCode.Boolean
-    elif get_origin(type_hint) is list:
+        return OMFTypeProperty(OMFTypeCode.Number)
+    if type_hint is datetime:
+        return OMFTypeProperty(OMFTypeCode.String, OMFFormatCode.DateTime)
+    if type_hint is bool:
+        return OMFTypeProperty(OMFTypeCode.Boolean)
+    if get_origin(type_hint) is list:
         arg = get_args(type_hint)[0]
-        result = getOMFTypeFromPythonType(arg)
-        if result[0] == OMFTypeCode.Array or result[0] == OMFTypeCode.Object:
-            raise ValueError(
-                'Invalid OMF Type: Nested lists and objects are not supported')
-        items = OMFTypeProperty(result[0], result[1])
-        omf_type_code = OMFTypeCode.Array
-    elif get_origin(type_hint) is dict:
+        return OMFTypeProperty(OMFTypeCode.Array, Items=getOMFTypeFromPythonType(arg))
+    if get_origin(type_hint) is dict:
         args = get_args(type_hint)
         if args[0] is not str:
             raise ValueError(
                 'Invalid OMF Type: Dictionaries must have key of type string')
-        result = getOMFTypeFromPythonType(args[1])
-        if result[0] == OMFTypeCode.Array or result[0] == OMFTypeCode.Object:
-            raise ValueError(
-                'Invalid OMF Type: Nested lists and objects are not supported')
-        additional_properties = OMFTypeProperty(result[0], result[1])
-        omf_type_code = OMFTypeCode.Object
-        omf_format_code = OMFFormatCode.Dictionary
+        return OMFTypeProperty(OMFTypeCode.Object, OMFFormatCode.Dictionary, AdditionalProperties=getOMFTypeFromPythonType(args[1]))
 
-    return (omf_type_code, omf_format_code, items, additional_properties)
+    return OMFTypeProperty(OMFTypeCode.String)
 
 
 def getOMFTypePropertyPythonProperty(prop: property) -> OMFTypeProperty:
     type_hint = get_type_hints(prop.fget).get('return', None)
-    omf_type_code, omf_format_code, items, additional_properties = getOMFTypeFromPythonType(
-        type_hint)
+    type_property = getOMFTypeFromPythonType(type_hint)
 
     if hasattr(prop.fget, '__omf_type_property'):
-        type_property = getattr(prop.fget, '__omf_type_property')
-        if not type_property.Format:
-            type_property.Format = omf_format_code
-        if not type_property.Type:
-            type_property.Type = omf_type_code
-        return type_property
-    return OMFTypeProperty(omf_type_code, omf_format_code, items, AdditionalProperties=additional_properties)
+        user_type_property = getattr(prop.fget, '__omf_type_property')
+        if not user_type_property.Format:
+            user_type_property.Format = type_property.Format
+        if not user_type_property.Type:
+            user_type_property.Type = type_property.Type
+        if not user_type_property.Items:
+            user_type_property.Items = type_property.Items
+        if not user_type_property.AdditionalProperties:
+            user_type_property.AdditionalProperties = type_property.AdditionalProperties
+        return user_type_property
+    return type_property
 
 
 def convert(omf_class: type) -> OMFType:
@@ -142,7 +129,8 @@ def omf_type_property(Type: OMFTypeCode | list[OMFTypeCode] = None,
 
     def wrap(func):
         if isinstance(func, property):
-            raise ValueError("Property type is not a valid input. Ensure the property decorator comes before the omf_type_property decorator.")
+            raise ValueError(
+                "Property type is not a valid input. Ensure the property decorator comes before the omf_type_property decorator.")
         if not isinstance(func, FunctionType):
             raise ValueError("Non-function type is not a valid input.")
         omf_type_property_attribute = OMFTypeProperty(

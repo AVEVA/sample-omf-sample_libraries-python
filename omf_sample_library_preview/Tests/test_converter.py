@@ -9,21 +9,25 @@ from ..Models import OMFClassification, OMFFormatCode, OMFType, OMFTypeCode, OMF
 @pytest.mark.parametrize(
     "type_hint,expected",
     [
-        (bool, (OMFTypeCode.Boolean, None, None, None)),
-        (int, (OMFTypeCode.Integer, None, None, None)),
-        (float, (OMFTypeCode.Number, None, None, None)),
-        (datetime, (OMFTypeCode.String, OMFFormatCode.DateTime, None, None)),
-        (float | None, ([OMFTypeCode.Number,
-         OMFTypeCode.Null], None, None, None)),
-        (None | float, ([OMFTypeCode.Number,
-         OMFTypeCode.Null], None, None, None)),
-        (list[int], (OMFTypeCode.Array, None,
-         OMFTypeProperty(OMFTypeCode.Integer), None)),
-        (dict[str, str], (OMFTypeCode.Object, OMFFormatCode.Dictionary,
-         None, OMFTypeProperty(OMFTypeCode.String)))
+        (bool, OMFTypeProperty(OMFTypeCode.Boolean)),
+        (int, OMFTypeProperty(OMFTypeCode.Integer)),
+        (float, OMFTypeProperty(OMFTypeCode.Number)),
+        (datetime, OMFTypeProperty(OMFTypeCode.String, OMFFormatCode.DateTime)),
+        (float | None, OMFTypeProperty(
+            [OMFTypeCode.Number, OMFTypeCode.Null])),
+        (None | float, OMFTypeProperty(
+            [OMFTypeCode.Number, OMFTypeCode.Null])),
+        (list[int], OMFTypeProperty(OMFTypeCode.Array,
+         None, OMFTypeProperty(OMFTypeCode.Integer))),
+        (dict[str, str], OMFTypeProperty(OMFTypeCode.Object, OMFFormatCode.Dictionary,
+         AdditionalProperties=OMFTypeProperty(OMFTypeCode.String))),
+        (list[list[int]], OMFTypeProperty(OMFTypeCode.Array, None, OMFTypeProperty(
+            OMFTypeCode.Array, None, OMFTypeProperty(OMFTypeCode.Integer)))),
+        (dict[str, dict[str, str]], OMFTypeProperty(OMFTypeCode.Object, OMFFormatCode.Dictionary, AdditionalProperties=OMFTypeProperty(
+            OMFTypeCode.Object, OMFFormatCode.Dictionary, AdditionalProperties=OMFTypeProperty(OMFTypeCode.String))))
     ]
 )
-def test_validGetOMFTypeFromPythonType(type_hint: type, expected: (OMFTypeCode, OMFFormatCode, OMFTypeProperty, OMFTypeProperty)):
+def test_validGetOMFTypeFromPythonType(type_hint: type, expected: OMFTypeProperty):
     assert getOMFTypeFromPythonType(type_hint) == expected
 
 
@@ -33,9 +37,7 @@ def test_validGetOMFTypeFromPythonType(type_hint: type, expected: (OMFTypeCode, 
         NoneType,
         float | int,
         float | int | str,
-        dict[int, str],
-        list[list[int]],
-        dict[str, dict[str, str]]
+        dict[int, str]
     ]
 )
 def test_invalidGetOMFTypeFromPythonType(type_hint: type):
