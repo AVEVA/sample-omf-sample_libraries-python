@@ -1,8 +1,9 @@
+from dataclasses import dataclass
 from datetime import datetime
 from types import UnionType, NoneType, FunctionType
 from typing import Any, get_type_hints, get_origin, get_args
 
-from ..Models import OMFClassification, OMFExtrapolationMode, OMFFormatCode, OMFInterpolationMode, OMFType, OMFTypeCode, OMFTypeProperty
+from ..Models import OMFClassification, OMFExtrapolationMode, OMFFormatCode, OMFInterpolationMode, OMFType, OMFTypeCode, OMFTypeProperty, OMFTypeType
 
 
 def getOMFTypeFromPythonType(type_hint: type) -> OMFTypeProperty:
@@ -54,6 +55,12 @@ def getOMFTypePropertyPythonProperty(prop: property) -> OMFTypeProperty:
 
     if hasattr(prop.fget, '__omf_type_property'):
         user_type_property = getattr(prop.fget, '__omf_type_property')
+
+        # We don't want to use the generated type property if RefType was included
+        if user_type_property.RefTypeId:
+            return user_type_property
+
+        # Replace undefined user props with generated type properties
         if not user_type_property.Format:
             user_type_property.Format = type_property.Format
         if not user_type_property.Type:
@@ -92,7 +99,7 @@ def convert(omf_class: type) -> OMFType:
 
 def omf_type(Id=None,
              Classification: OMFClassification = OMFClassification.Dynamic,
-             Type: str = 'Object',
+             Type: OMFTypeType = OMFTypeType.Object,
              Version: str = None,
              Name: str = None,
              Description: str = None,
@@ -109,7 +116,14 @@ def omf_type(Id=None,
             id, Classification, Type, Version, Name, Description, Tags, Metadata, Enum, Extrapolation)
         setattr(cls, '__omf_type', omf_type_attribute)
 
-        return cls
+        # set annotations to be used by the dataclass constructor
+        properties = [
+            (k, get_type_hints(v.fget).get('return', None))
+            for k, v in cls.__dict__.items()
+            if isinstance(v, property)]
+        cls.__annotations__ = dict(properties)
+
+        return dataclass(cls)
 
     return wrap
 
@@ -130,12 +144,13 @@ def omf_type_property(Type: OMFTypeCode | list[OMFTypeCode] = None,
     def wrap(func):
         if isinstance(func, property):
             raise ValueError(
-                "Property type is not a valid input. Ensure the property decorator comes before the omf_type_property decorator.")
+                "Property type is not a valid input. This decorator automatically creates a property.")
         if not isinstance(func, FunctionType):
             raise ValueError("Non-function type is not a valid input.")
         omf_type_property_attribute = OMFTypeProperty(
             Type, Format, Items, RefTypeId, IsIndex, IsQuality,  Name, Description, Uom, Minimum, Maximum, Interpolation)
         setattr(func, '__omf_type_property', omf_type_property_attribute)
-        return func
+
+        return property(func)
 
     return wrap

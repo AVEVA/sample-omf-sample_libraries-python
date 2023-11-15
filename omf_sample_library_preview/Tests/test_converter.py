@@ -3,7 +3,7 @@ import pytest
 from types import NoneType
 
 from ..Converters.ClassToOMFTypeConverter import getOMFTypeFromPythonType, omf_type, omf_type_property, convert
-from ..Models import OMFClassification, OMFFormatCode, OMFType, OMFTypeCode, OMFTypeProperty
+from ..Models import OMFClassification, OMFFormatCode, OMFType, OMFTypeCode, OMFTypeType, OMFTypeProperty
 
 
 @pytest.mark.parametrize(
@@ -51,12 +51,11 @@ class MyClass1:
         self.__timestamp = timestamp
         self.__value = value
 
-    @property
     @omf_type_property(IsIndex=True)
     def timestamp(self) -> datetime:
         return self.__timestamp
 
-    @property
+    @omf_type_property()
     def value(self) -> float:
         return self.__value
 
@@ -64,7 +63,7 @@ class MyClass1:
 @pytest.mark.parametrize(
     "omf_class,expected",
     [
-        (MyClass1, OMFType('MyClass1', OMFClassification.Dynamic, Properties={
+        (MyClass1, OMFType('MyClass1', OMFClassification.Dynamic, OMFTypeType.Object, Properties={
             'timestamp': OMFTypeProperty(OMFTypeCode.String, OMFFormatCode.DateTime, IsIndex=True),
             'value': OMFTypeProperty(OMFTypeCode.Number)
         }))

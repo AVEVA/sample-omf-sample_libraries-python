@@ -8,6 +8,7 @@ from .OMFClassification import OMFClassification
 from .OMFEnum import OMFEnum
 from .OMFExtrapolationMode import OMFExtrapolationMode
 from .OMFTypeProperty import OMFTypeProperty
+from .OMFTypeType import OMFTypeType
 from .Serializeable import Serializeable
 
 
@@ -15,7 +16,7 @@ from .Serializeable import Serializeable
 class OMFType(Serializeable):
     Id: str
     Classification: OMFClassification = None
-    Type: str = 'Object'
+    Type: OMFTypeType = None
     Version: str = None
     Name: str = None
     Description: str = None

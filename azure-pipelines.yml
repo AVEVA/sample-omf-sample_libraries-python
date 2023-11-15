@@ -59,6 +59,7 @@ jobs:
           cd ./omf_sample_library_preview/Tests
           python -m pytest --junitxml=junit/test-results-omfclient.xml test_omfclient.py --e2e True
           python -m pytest --junitxml=junit/test-results-converter.xml test_converter.py
+          python -m pytest --junitxml=junit/test-results-converter.xml test_serializer.py
           echo Complete
         displayName: 'Run tests'
 

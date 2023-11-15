@@ -22,6 +22,7 @@ def dictionaryFactory(data):
 
     return dict(new_list)
 
+
 def deserialize(field_type, field_value):
     if isinstance(field_type, UnionType):
         args = get_args(field_type)
@@ -31,7 +32,7 @@ def deserialize(field_type, field_value):
                 return deserialize(arg, field_value)
             except:
                 pass
-        
+
         return result
 
     if get_origin(field_type) is list:
@@ -40,7 +41,7 @@ def deserialize(field_type, field_value):
         for item in field_value:
             items.append(deserialize(arg, item))
         return items
-    
+
     if get_origin(field_type) is dict:
         items = {}
         args = get_args(field_type)
@@ -50,7 +51,7 @@ def deserialize(field_type, field_value):
 
     if issubclass(field_type, Serializeable):
         return field_type.fromJson(field_value)
-    
+
     if field_type is Any:
         return field_value
 

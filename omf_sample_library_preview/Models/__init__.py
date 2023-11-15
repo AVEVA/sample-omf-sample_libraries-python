@@ -16,3 +16,4 @@ from .OMFMessageType import OMFMessageType
 from .OMFType import OMFType
 from .OMFTypeCode import OMFTypeCode
 from .OMFTypeProperty import OMFTypeProperty
+from .OMFTypeType import OMFTypeType
