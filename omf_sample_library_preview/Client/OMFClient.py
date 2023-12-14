@@ -3,10 +3,9 @@ from __future__ import annotations
 import gzip
 import json
 import logging
-import requests
 import time
 
-from .OMFError import OMFError
+import requests
 
 from ..Models.OMFContainer import OMFContainer
 from ..Models.OMFData import OMFData
@@ -14,12 +13,20 @@ from ..Models.OMFLinkData import OMFLinkData
 from ..Models.OMFMessageAction import OMFMessageAction
 from ..Models.OMFMessageType import OMFMessageType
 from ..Models.OMFType import OMFType
+from .OMFError import OMFError
 
 
 class OMFClient(object):
     """Handles communication with OMF Endpoint."""
 
-    def __init__(self, url: str, omf_version: str = '1.2', verify_ssl: bool = True, logging_enabled: bool = False, max_retries: int = 10):
+    def __init__(
+        self,
+        url: str,
+        omf_version: str = '1.2',
+        verify_ssl: bool = True,
+        logging_enabled: bool = False,
+        max_retries: int = 10,
+    ):
         self.__url = url
         self.__omf_version = omf_version
         self.__verify_ssl = verify_ssl
@@ -84,7 +91,9 @@ class OMFClient(object):
         """
         return self.__omf_endpoint
 
-    def verifySuccessfulResponse(self, response, main_message: str, throw_on_bad: bool = True):
+    def verifySuccessfulResponse(
+        self, response, main_message: str, throw_on_bad: bool = True
+    ):
         """
         Verifies that a response was successful and optionally throws an exception on a bad response
         :param response: Http response
@@ -94,14 +103,17 @@ class OMFClient(object):
 
         if self.__logging_enabled:
             logging.info(
-                f'request executed in {response.elapsed.microseconds / 1000}ms - status code: {response.status_code}')
+                f'request executed in {response.elapsed.microseconds / 1000}ms - status code: {response.status_code}'
+            )
             logging.debug(
-                f'{main_message}. Response: {response.status_code} {response.text}.')
+                f'{main_message}. Response: {response.status_code} {response.text}.'
+            )
 
         # response code in 200s if the request was successful!
         if response.status_code < 200 or response.status_code >= 300:
             error = OMFError(
-                f'{main_message}. Response: {response.status_code} {response.text}. ')
+                f'{main_message}. Response: {response.status_code} {response.text}. '
+            )
             response.close()
 
             if self.__logging_enabled:
@@ -117,16 +129,25 @@ class OMFClient(object):
             'messageformat': 'JSON',
             'omfversion': self.OMFVersion,
             'compression': 'gzip',
-            'x-requested-with': 'xmlhttprequest'
+            'x-requested-with': 'xmlhttprequest',
         }
 
-    def containerRequest(self, action: OMFMessageAction, containers: list[OMFContainer]):
+    def containerRequest(
+        self, action: OMFMessageAction, containers: list[OMFContainer]
+    ):
         self.omfRequest(OMFMessageType.Container, action, containers)
 
-    def containerRequest(self, action: OMFMessageAction, containers: list[OMFContainer]):
+    def containerRequest(
+        self, action: OMFMessageAction, containers: list[OMFContainer]
+    ):
         self.omfRequest(OMFMessageType.Container, action, containers)
 
-    def omfRequest(self, message_type: OMFMessageType, action: OMFMessageAction, omf_message: list[OMFType | OMFContainer | OMFData | OMFLinkData]) -> requests.Response:
+    def omfRequest(
+        self,
+        message_type: OMFMessageType,
+        action: OMFMessageAction,
+        omf_message: list[OMFType | OMFContainer | OMFData | OMFLinkData],
+    ) -> requests.Response:
         """
         Base OMF request function
         :param message_type: OMF message type
@@ -137,7 +158,7 @@ class OMFClient(object):
 
         if type(omf_message) is not list:
             raise TypeError('Omf messages must be a list')
-        
+
         omf_message_json = [obj.toDictionary() for obj in omf_message]
 
         msg_body = gzip.compress(bytes(json.dumps(omf_message_json), 'utf-8'))
@@ -149,17 +170,28 @@ class OMFClient(object):
             headers=headers,
             data=msg_body,
             verify=self.VerifySSL,
-            timeout=600
+            timeout=600,
         )
 
-    def request(self, method: str, url: str, params=None, data=None, headers=None, additional_headers=None, **kwargs) -> requests.Response:
-
+    def request(
+        self,
+        method: str,
+        url: str,
+        params=None,
+        data=None,
+        headers=None,
+        additional_headers=None,
+        **kwargs,
+    ) -> requests.Response:
         if not self.VerifySSL:
-            print('You are not verifying the certificate of the end point. This is not advised for any system as there are security issues with doing this.')
+            print(
+                'You are not verifying the certificate of the end point. This is not advised for any system as there are security issues with doing this.'
+            )
 
             if self.__logging_enabled:
                 logging.warning(
-                    f'You are not verifying the certificate of the end point. This is not advised for any system as there are security issues with doing this.')
+                    f'You are not verifying the certificate of the end point. This is not advised for any system as there are security issues with doing this.'
+                )
 
         # Start with the necessary headers for SDS calls, such as authorization and content-type
         if not headers:
@@ -182,7 +214,9 @@ class OMFClient(object):
                 else:
                     logging.debug(f'{header}: <redacted>')
 
-        return self.__session.request(method, url, params=params, data=data, headers=headers, **kwargs)
+        return self.__session.request(
+            method, url, params=params, data=data, headers=headers, **kwargs
+        )
 
     def retryWithBackoff(self, fn, *args, **kwargs) -> requests.Response:
         success = False
@@ -190,11 +224,11 @@ class OMFClient(object):
         while not success:
             response = fn(*args, **kwargs)
             if response.status_code == 504 or response.status_code == 503:
-                if (failures >= 0 and failures >= self.__max_retries):
+                if failures >= 0 and failures >= self.__max_retries:
                     logging.error('Server error. No more retries available.')
                     return response
                 else:
-                    timeout = 3600 if failures >= 12 else 2 ** failures
+                    timeout = 3600 if failures >= 12 else 2**failures
                     logging.warning('Server error. Retrying...')
                     time.sleep(timeout)
                     failures += 1

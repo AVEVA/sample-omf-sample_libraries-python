@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from .OMFLinkValue import OMFLinkValue
 from .OMFData import OMFData
+from .OMFLinkValue import OMFLinkValue
 
 
 class OMFLinkData(OMFData):

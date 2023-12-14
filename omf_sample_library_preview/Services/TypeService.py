@@ -1,7 +1,7 @@
 from ..Client.OMFClient import OMFClient
-from ..Models.OMFType import OMFType
 from ..Models.OMFMessageAction import OMFMessageAction
 from ..Models.OMFMessageType import OMFMessageType
+from ..Models.OMFType import OMFType
 
 
 class TypeService:
@@ -21,7 +21,8 @@ class TypeService:
             self.__omf_client.omfRequest,
             OMFMessageType.Type,
             OMFMessageAction.Create,
-            omf_types)
+            omf_types,
+        )
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to create types')
 
     def updateTypes(self, omf_types: list[OMFType]):
@@ -33,7 +34,8 @@ class TypeService:
             self.__omf_client.omfRequest,
             OMFMessageType.Type,
             OMFMessageAction.Update,
-            omf_types)
+            omf_types,
+        )
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to update types')
 
     def deleteTypes(self, omf_types: list[OMFType]):
@@ -45,5 +47,6 @@ class TypeService:
             self.__omf_client.omfRequest,
             OMFMessageType.Type,
             OMFMessageAction.Delete,
-            omf_types)
+            omf_types,
+        )
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to delete types')

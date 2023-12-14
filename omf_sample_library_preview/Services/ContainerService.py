@@ -21,8 +21,11 @@ class ContainerService:
             self.__omf_client.omfRequest,
             OMFMessageType.Container,
             OMFMessageAction.Create,
-            omf_containers)
-        self.__omf_client.verifySuccessfulResponse(response, 'Failed to create container')
+            omf_containers,
+        )
+        self.__omf_client.verifySuccessfulResponse(
+            response, 'Failed to create container'
+        )
 
     def updateContainers(self, omf_containers: list[OMFContainer]):
         """
@@ -33,8 +36,11 @@ class ContainerService:
             self.__omf_client.omfRequest,
             OMFMessageType.Container,
             OMFMessageAction.Update,
-            omf_containers)
-        self.__omf_client.verifySuccessfulResponse(response, 'Failed to update container')
+            omf_containers,
+        )
+        self.__omf_client.verifySuccessfulResponse(
+            response, 'Failed to update container'
+        )
 
     def deleteContainers(self, omf_containers: list[OMFContainer]):
         """
@@ -45,5 +51,8 @@ class ContainerService:
             self.__omf_client.omfRequest,
             OMFMessageType.Container,
             OMFMessageAction.Delete,
-            omf_containers)
-        self.__omf_client.verifySuccessfulResponse(response, 'Failed to delete container')
+            omf_containers,
+        )
+        self.__omf_client.verifySuccessfulResponse(
+            response, 'Failed to delete container'
+        )

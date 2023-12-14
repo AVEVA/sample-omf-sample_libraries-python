@@ -1,10 +1,11 @@
 from __future__ import annotations
+
+import json
 from dataclasses import asdict
 from datetime import datetime
 from enum import Enum
 from types import UnionType
-from typing import Any, get_type_hints, get_origin, get_args
-import json
+from typing import Any, get_args, get_origin, get_type_hints
 
 
 def dictionaryFactory(data):

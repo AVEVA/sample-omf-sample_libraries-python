@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-
 from .OMFClassification import OMFClassification
 from .OMFEnum import OMFEnum
 from .OMFExtrapolationMode import OMFExtrapolationMode

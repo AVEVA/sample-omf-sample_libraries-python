@@ -21,7 +21,8 @@ class DataService:
             self.__omf_client.omfRequest,
             OMFMessageType.Data,
             OMFMessageAction.Create,
-            omf_data)
+            omf_data,
+        )
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to create data')
 
     def updateData(self, omf_data: list[OMFData]):
@@ -33,7 +34,8 @@ class DataService:
             self.__omf_client.omfRequest,
             OMFMessageType.Data,
             OMFMessageAction.Update,
-            omf_data)
+            omf_data,
+        )
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to update data')
 
     def deleteData(self, omf_data: list[OMFData]):
@@ -45,5 +47,6 @@ class DataService:
             self.__omf_client.omfRequest,
             OMFMessageType.Data,
             OMFMessageAction.Delete,
-            omf_data)
+            omf_data,
+        )
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to delete data')

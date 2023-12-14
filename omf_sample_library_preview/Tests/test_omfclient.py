@@ -5,7 +5,6 @@ from ..Client.OMFClient import OMFClient
 from ..Client.OMFError import OMFError
 
 
-
 @pytest.fixture
 def client():
     return OMFClient(url='https://test.com/omf')

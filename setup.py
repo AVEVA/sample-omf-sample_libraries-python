@@ -14,11 +14,8 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     url='https://github.com/osisoft/sample-omf_library_preview-python',
     packages=setuptools.find_packages(),
-    install_requires=[
-        'requests>=2.28.2',
-        'python-dateutil>=2.8.2'
-    ],
-    tests_require = [
+    install_requires=['requests>=2.28.2', 'python-dateutil>=2.8.2'],
+    tests_require=[
         'pytest>=7.0.1',
     ],
     python_requires='>=3.7',
@@ -26,5 +23,5 @@ setuptools.setup(
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
-    ]
+    ],
 )

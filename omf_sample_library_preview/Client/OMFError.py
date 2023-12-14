@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+
 class OMFError(Exception):
     """
     Helper class to hold exceptions

@@ -7,6 +7,7 @@ class OMFMessageAction(Enum):
     """
     enum 0-2
     """
+
     Create = 'Create'
     Update = 'Update'
     Delete = 'Delete'
