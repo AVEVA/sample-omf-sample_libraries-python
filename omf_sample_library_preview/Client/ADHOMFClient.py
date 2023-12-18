@@ -62,7 +62,7 @@ class ADHOMFClient(OMFClient):
             appsettings.get('NamespaceId'),
             appsettings.get('ClientId'),
             appsettings.get('ClientSecret'),
-            logging_enabled=True,
+            appsettings.get('LoggingEnabled', False),
         )
 
     @property
