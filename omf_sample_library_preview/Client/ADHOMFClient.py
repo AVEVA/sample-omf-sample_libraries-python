@@ -39,6 +39,7 @@ class ADHOMFClient(OMFClient):
 
         super().__init__(self.FullPath, omf_version, True, logging_enabled)
 
+    @staticmethod
     def fromAppsettings(path: str = None):
         if not path:
             path = 'appsettings.json'
