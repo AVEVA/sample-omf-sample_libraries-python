@@ -16,6 +16,11 @@ def dictionaryFactory(data):
         data_type = type(datum[1])
         if data_type == datetime:
             new_list.append((datum[0], datum[1].isoformat()))
+        elif data_type == list and issubclass(type(datum[1][0]), Enum):
+            sub_list = []
+            for item in datum[1]:
+                sub_list.append(item.value.lower())
+            new_list.append((datum[0], sub_list))
         elif issubclass(data_type, Enum):
             new_list.append((datum[0], datum[1].value))
         else:
