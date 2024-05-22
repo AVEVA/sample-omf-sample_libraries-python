@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='omf_sample_library_preview',
-    version='0.1.0_preview',
+    version='0.1.1_preview',
     author='AVEVA',
     license='Apache 2.0',
     author_email='samples@osisoft.com',

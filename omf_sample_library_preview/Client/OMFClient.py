@@ -215,9 +215,10 @@ class OMFClient(object):
                 else:
                     logging.debug(f'{header}: <redacted>')
 
-        return self.__session.request(
-            method, url, params=params, data=data, headers=headers, **kwargs
-        )
+        with self.__session as requestSession:
+            return requestSession.request(
+                method, url, params=params, data=data, headers=headers, **kwargs
+                )
 
     def retryWithBackoff(self, fn, *args, **kwargs) -> requests.Response:
         success = False
