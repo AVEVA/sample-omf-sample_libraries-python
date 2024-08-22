@@ -30,7 +30,7 @@ resources:
 
 variables:
   - name: analysisProject
-    value: sample-omf-sample_libraries-python
+    value: sample-omf-sample_libraries-python2
 
 parameters:
   - name: pool
