@@ -15,11 +15,11 @@ from .OMFError import OMFError
 
 
 class Authentication(object):
-    def __init__(self, tenant: str, url: str, client_id: str, client_secret: str):
-        self.__tenant = tenant
+    def __init__(self, account_id: str, resource: str, client_id: str, client_secret: str):
+        self.__account_id = account_id
         self.__client_id = client_id
         self.__client_secret = client_secret
-        self.__url = url
+        self.__resource = resource
 
         self.__expiration = 0
         self.__token = ''
@@ -36,12 +36,13 @@ class Authentication(object):
 
     def __getClientIDSecretToken(self) -> str:
         # Get OAuth endpoint configuration
-        endpoint = json.loads(
-            requests.get(
-                self.__url + '/identity/.well-known/openid-configuration'
-            ).content
-        )
-        token_endpoint = endpoint.get('token_endpoint')
+        # endpoint = json.loads(
+        #     requests.get(
+        #         self.__url + '/identity/.well-known/openid-configuration'
+        #     ).content
+        # )
+        # token_endpoint = endpoint.get('token_endpoint')
+        token_endpoint = "https://identity." + self.__resource + "/account/" + self.__account_id + "/authentication/connect/token"
 
         tokenInformation = requests.post(
             token_endpoint,
@@ -79,7 +80,7 @@ class Authentication(object):
             print('Step 1: Get OAuth endpoint configuration...')
             endpoint = json.loads(
                 requests.get(
-                    self.__url + '/identity/.well-known/openid-configuration'
+                    self.__resource + '/identity/.well-known/openid-configuration'
                 ).content
             )
             auth_endpoint = endpoint.get('authorization_endpoint')
@@ -122,7 +123,7 @@ class Authentication(object):
                 + '&scope='
                 + scope
                 + '&acr_values=tenant:'
-                + self.__tenant
+                + self.__account_id
             )
 
             # Open user default web browser at Auth page

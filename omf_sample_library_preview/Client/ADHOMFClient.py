@@ -16,8 +16,8 @@ class ADHOMFClient(OMFClient):
         self,
         resource: str,
         api_version: str,
-        tenant_id: str,
-        namespace_id: str,
+        account_id: str,
+        omfingress_id: str,
         client_id: str = None,
         client_secret: str = None,
         omf_version: str = '1.2',
@@ -25,13 +25,13 @@ class ADHOMFClient(OMFClient):
     ):
         self.__resource = resource
         self.__api_version = api_version
-        self.__tenant_id = tenant_id
-        self.__namespace_id = namespace_id
-        self.__full_path = f'{resource}/api/{api_version}/Tenants/{tenant_id}/Namespaces/{namespace_id}'
+        self.__account_id = account_id
+        self.__omfingress_id = omfingress_id
+        self.__full_path = f'https://{resource}/api/account/{account_id}/omfingress/{omfingress_id}/v1/omf'
 
         if client_id is not None:
             self.__auth_object = Authentication(
-                tenant_id, resource, client_id, client_secret
+                account_id, resource, client_id, client_secret
             )
             self.__auth_object.getToken()
         else:
@@ -58,8 +58,8 @@ class ADHOMFClient(OMFClient):
         return ADHOMFClient(
             appsettings.get('Resource'),
             appsettings.get('ApiVersion'),
-            appsettings.get('TenantId'),
-            appsettings.get('NamespaceId'),
+            appsettings.get('AccountId'),
+            appsettings.get('OmfIngressId'),
             appsettings.get('ClientId'),
             appsettings.get('ClientSecret'),
             appsettings.get('LoggingEnabled', False),
@@ -82,20 +82,20 @@ class ADHOMFClient(OMFClient):
         return self.__api_version
 
     @property
-    def TenantId(self) -> str:
+    def AccountId(self) -> str:
         """
-        Returns the tenant ID
+        Returns the account ID
         :return:
         """
-        return self.__tenant_id
+        return self.__account_id
 
     @property
-    def NamespaceId(self) -> str:
+    def OmfIngress(self) -> str:
         """
-        Returns the namespace ID
+        Returns the Omfingress ID
         :return:
         """
-        return self.__namespace_id
+        return self.__omfingress_id
 
     @property
     def FullPath(self) -> bool:
