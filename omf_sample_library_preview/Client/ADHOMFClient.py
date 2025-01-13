@@ -27,7 +27,7 @@ class ADHOMFClient(OMFClient):
         self.__api_version = api_version
         self.__account_id = account_id
         self.__omfingress_id = omfingress_id
-        self.__full_path = f'https://{resource}/api/account/{account_id}/omfingress/{omfingress_id}/v1/omf'
+        self.__full_path = f'https://{resource}/api/account/{account_id}/omfingress/{omfingress_id}/v1/messages'
 
         if client_id is not None:
             self.__auth_object = Authentication(
