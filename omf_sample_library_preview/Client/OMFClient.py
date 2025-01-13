@@ -31,7 +31,7 @@ class OMFClient(object):
         self.__omf_version = omf_version
         self.__verify_ssl = verify_ssl
         self.__logging_enabled = logging_enabled
-        self.__omf_endpoint = f'{url}/omf'
+        self.__omf_endpoint = url
         self.__session = requests.Session()
         self.__max_retries = max_retries
 
