@@ -173,6 +173,31 @@ class OMFClient(object):
             verify=self.VerifySSL,
             timeout=600,
         )
+    
+    def omfRequestBody(
+        self,
+        message_type: OMFMessageType,
+        action: OMFMessageAction,
+        omf_message: any,
+    ) -> requests.Response:
+        """
+        Base OMF request function
+        :param message_type: OMF message type
+        :param action: OMF action
+        :param omf_message: OMF message
+        :return: Http response
+        """
+
+        headers = self.getHeaders(message_type, action)
+
+        return self.request(
+            'POST',
+            self.OMFEndpoint,
+            headers=headers,
+            data=omf_message,
+            verify=self.VerifySSL,
+            timeout=600,
+        )
 
     def request(
         self,
