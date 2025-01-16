@@ -159,10 +159,7 @@ class OMFClient(object):
         if type(omf_message) is not list:
             raise TypeError('Omf messages must be a list')
 
-        omf_message_json = [obj.toDictionary() for obj in omf_message]
-        body = json.dumps(omf_message_json)
-        logging.debug(f"omf body: {body}")
-        compressed_body = gzip.compress(bytes(body, 'utf-8'))
+        compressed_body = self.compressOMFMessage(omf_message)
         headers = self.getHeaders(message_type, action)
 
         return self.request(
@@ -173,6 +170,13 @@ class OMFClient(object):
             verify=self.VerifySSL,
             timeout=600,
         )
+
+    def compressOMFMessage(self, omf_message):
+        omf_message_json = [obj.toDictionary() for obj in omf_message]
+        body = json.dumps(omf_message_json)
+        logging.debug(f"omf body: {body}")
+        compressed_body = gzip.compress(bytes(body, 'utf-8'))
+        return compressed_body
     
     def omfRequestBody(
         self,

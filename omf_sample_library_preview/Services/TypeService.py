@@ -50,3 +50,44 @@ class TypeService:
             omf_types,
         )
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to delete types')
+
+        
+    def createTypesBody(self, body: any):
+        """
+        Creates OMF Types and throws error on failure
+        :param body: Formed zipped OMF message
+        """
+        response = self.__omf_client.retryWithBackoff(
+            self.__omf_client.omfRequestBody,
+            OMFMessageType.Type,
+            OMFMessageAction.Create,
+            body,
+        )
+        self.__omf_client.verifySuccessfulResponse(response, 'Failed to create Types')
+
+    def updateTypesBody(self, body: any):
+        """
+        Updates OMF Types and throws error on failure
+        :param body: Formed zipped OMF message
+        """
+        response = self.__omf_client.retryWithBackoff(
+            self.__omf_client.omfRequestBody,
+            OMFMessageType.Type,
+            OMFMessageAction.Update,
+            body,
+        )
+        self.__omf_client.verifySuccessfulResponse(response, 'Failed to update Types')
+
+
+    def deleteTypesBody(self, body: any):
+        """
+        Deletes OMF Types and throws error on failure
+        :param body: Formed zipped OMF message
+        """
+        response = self.__omf_client.retryWithBackoff(
+            self.__omf_client.omfRequestBody,
+            OMFMessageType.Type,
+            OMFMessageAction.Delete,
+            body,
+        )
+        self.__omf_client.verifySuccessfulResponse(response, 'Failed to delete Types')

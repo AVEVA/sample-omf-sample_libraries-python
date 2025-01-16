@@ -25,6 +25,19 @@ class DataService:
         )
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to create data')
 
+    def createDataBody(self, body: any):
+        """
+        Creates OMF Data and throws error on failure
+        :param body: Formed zipped OMF message
+        """
+        response = self.__omf_client.retryWithBackoff(
+            self.__omf_client.omfRequestBody,
+            OMFMessageType.Data,
+            OMFMessageAction.Create,
+            body,
+        )
+        self.__omf_client.verifySuccessfulResponse(response, 'Failed to create data')
+
     def updateData(self, omf_data: list[OMFData]):
         """
         Updates OMF Data and throws error on failure
@@ -41,7 +54,7 @@ class DataService:
     def updateDataBody(self, body: any):
         """
         Updates OMF Data and throws error on failure
-        :param omf_data: List of OMF Data
+        :param body: Formed zipped OMF message
         """
         response = self.__omf_client.retryWithBackoff(
             self.__omf_client.omfRequestBody,
@@ -61,5 +74,18 @@ class DataService:
             OMFMessageType.Data,
             OMFMessageAction.Delete,
             omf_data,
+        )
+        self.__omf_client.verifySuccessfulResponse(response, 'Failed to delete data')
+
+    def deleteData(self, body: any):
+        """
+        Deletes OMF Data and throws error on failure
+        :param body: Formed zipped OMF message
+        """
+        response = self.__omf_client.retryWithBackoff(
+            self.__omf_client.omfRequestBody,
+            OMFMessageType.Data,
+            OMFMessageAction.Delete,
+            body,
         )
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to delete data')
