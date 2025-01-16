@@ -4,6 +4,6 @@
 
 - Initial release
 
-## 0.1.2_preview / 2023-11-09
+## 0.1.2_preview / 2025-1-16
 
 - Adding support for fanning to multiple clients (can be different endpoints)
