@@ -45,13 +45,6 @@ class OMFClients(object):
         """
         """
         self.__OMFClient.append(client)  
-
-    def compressOMFMessage(self, omf_message):
-        omf_message_json = [obj.toDictionary() for obj in omf_message]
-        body = json.dumps(omf_message_json)
-        logging.debug(f"omf body: {body}")
-        compressed_body = gzip.compress(bytes(body, 'utf-8'))
-        return compressed_body
     
     def omfRequests(
         self,
@@ -66,8 +59,8 @@ class OMFClients(object):
         :param omf_data: OMF data
         :return: Http response
         """         
-        compressed_body = self.compressOMFMessage(omf_data)
+        compressed_body = OMFClient.compressOMFMessage(omf_data)
 
         for client in self.__OMFClient:
-            client.omfRequestBody(message_type,action,compressed_body)
+            client.omfRequest(message_type,action,compressed_body)
     

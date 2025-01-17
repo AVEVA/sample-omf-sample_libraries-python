@@ -1,3 +1,6 @@
+import gzip
+import json
+import logging
 from ..Client.OMFClient import OMFClient
 from ..Models.OMFContainer import OMFContainer
 from ..Models.OMFData import OMFData
@@ -49,7 +52,7 @@ class GeneralService:
             else:
                 raise TypeError('Invalid OMF Object type')
 
-        return types, containers, data
+        return types, containers, data    
 
     def create(self, omf_objects: list[OMFType | OMFContainer | OMFData]):
         """
