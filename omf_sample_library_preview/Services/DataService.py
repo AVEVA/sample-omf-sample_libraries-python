@@ -50,4 +50,3 @@ class DataService:
             omf_data,
         )
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to delete data')
-        self.__omf_client.verifySuccessfulResponse(response, 'Failed to delete data')
