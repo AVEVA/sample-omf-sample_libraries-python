@@ -12,7 +12,7 @@ class TypeService:
     def OMFClient(self) -> OMFClient:
         return self.__omf_client
 
-    def createTypes(self, omf_types: list[OMFType]):
+    def createTypes(self, omf_types: list[OMFType] | bytes):
         """
         Creates OMF Types and throws error on failure
         :param omf_types: List of OMF Types
@@ -25,7 +25,7 @@ class TypeService:
         )
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to create types')
 
-    def updateTypes(self, omf_types: list[OMFType]):
+    def updateTypes(self, omf_types: list[OMFType] | bytes):
         """
         Updates OMF Types and throws error on failure
         :param omf_types: List of OMF Types
@@ -38,7 +38,7 @@ class TypeService:
         )
         self.__omf_client.verifySuccessfulResponse(response, 'Failed to update types')
 
-    def deleteTypes(self, omf_types: list[OMFType]):
+    def deleteTypes(self, omf_types: list[OMFType] | bytes):
         """
         Deletes OMF Types and throws error on failure
         :param omf_types: List of OMF Types
