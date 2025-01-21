@@ -8,11 +8,11 @@ setuptools.setup(
     version='0.1.2_preview',
     author='AVEVA',
     license='Apache 2.0',
-    author_email='samples@osisoft.com',
+    author_email='samples@aveva.com',
     description='A preview of an OMF client library',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/osisoft/sample-omf_library_preview-python',
+    url='https://github.com/aveva/sample-omf_library_preview-python',
     packages=setuptools.find_packages(),
     install_requires=['requests>=2.28.2', 'python-dateutil>=2.8.2'],
     tests_require=[
