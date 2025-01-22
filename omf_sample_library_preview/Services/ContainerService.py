@@ -12,7 +12,7 @@ class ContainerService:
     def OMFClient(self) -> OMFClient:
         return self.__omf_client
 
-    def createContainers(self, omf_containers: list[OMFContainer]):
+    def createContainers(self, omf_containers: list[OMFContainer] | bytes):
         """
         Creates OMF Containers and throws error on failure
         :param omf_containers: List of OMF Containers
@@ -27,7 +27,7 @@ class ContainerService:
             response, 'Failed to create container'
         )
 
-    def updateContainers(self, omf_containers: list[OMFContainer]):
+    def updateContainers(self, omf_containers: list[OMFContainer] | bytes):
         """
         Updates OMF Containers and throws error on failure
         :param omf_containers: List of OMF Containers
@@ -42,7 +42,7 @@ class ContainerService:
             response, 'Failed to update container'
         )
 
-    def deleteContainers(self, omf_containers: list[OMFContainer]):
+    def deleteContainers(self, omf_containers: list[OMFContainer] | bytes):
         """
         Deletes OMF Containers and throws error on failure
         :param omf_containers: List of OMF Containers

@@ -91,6 +91,15 @@ class OMFClient(object):
         """
         return self.__omf_endpoint
 
+    @staticmethod
+    def compressOMFMessage(omf_message) -> bytes:
+        omf_message_json = [obj.toDictionary() for obj in omf_message]
+        body = json.dumps(omf_message_json)
+        logging.debug(f"omf body: {body}")
+        compressed_body = gzip.compress(bytes(body, 'utf-8'))
+        gzip.open
+        return compressed_body
+
     def verifySuccessfulResponse(
         self, response, main_message: str, throw_on_bad: bool = True
     ):
@@ -137,16 +146,11 @@ class OMFClient(object):
     ):
         self.omfRequest(OMFMessageType.Container, action, containers)
 
-    def containerRequest(
-        self, action: OMFMessageAction, containers: list[OMFContainer]
-    ):
-        self.omfRequest(OMFMessageType.Container, action, containers)
-
     def omfRequest(
         self,
         message_type: OMFMessageType,
         action: OMFMessageAction,
-        omf_message: list[OMFType | OMFContainer | OMFData | OMFLinkData],
+        omf_message: list[OMFType | OMFContainer | OMFData | OMFLinkData] | bytes,
     ) -> requests.Response:
         """
         Base OMF request function
@@ -156,13 +160,18 @@ class OMFClient(object):
         :return: Http response
         """
 
-        if type(omf_message) is not list:
-            raise TypeError('Omf messages must be a list')
+        if type(omf_message) is not list and type(omf_message) is not bytes:
+            raise TypeError('Omf messages must be a list or bytes')
+        
+        compressed_body = {}
+        if type(omf_message) is not bytes:
+            compressed_body = self.compressOMFMessage(omf_message)
+        else:
+            if omf_message[0] == 31 and omf_message[1] == 139:
+                compressed_body = omf_message
+            else:
+                raise TypeError('Omf messages must be gzip bytes')
 
-        omf_message_json = [obj.toDictionary() for obj in omf_message]
-        body = json.dumps(omf_message_json)
-        logging.debug(f"omf body: {body}")
-        compressed_body = gzip.compress(bytes(body, 'utf-8'))
         headers = self.getHeaders(message_type, action)
 
         return self.request(
