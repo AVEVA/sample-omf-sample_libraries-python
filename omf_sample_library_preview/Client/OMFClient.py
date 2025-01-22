@@ -167,7 +167,7 @@ class OMFClient(object):
         if type(omf_message) is not bytes:
             compressed_body = self.compressOMFMessage(omf_message)
         else:
-            if omf_message[0] == 31 and omf_message[1] == 139:
+            if self.IsGzipFormat(omf_message):
                 compressed_body = omf_message
             else:
                 raise TypeError('Omf messages must be gzip bytes')
@@ -182,6 +182,9 @@ class OMFClient(object):
             verify=self.VerifySSL,
             timeout=600,
         )
+
+    def IsGzipFormat(self, omf_message):
+        return omf_message[0] == 31 and omf_message[1] == 139
 
     def request(
         self,
